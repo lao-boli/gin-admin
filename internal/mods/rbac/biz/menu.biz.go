@@ -102,6 +102,10 @@ func (a *Menu) createInBatchByParent(ctx context.Context, items schema.Menus, pa
 				menuItem.Path = item.Path
 				changed = true
 			}
+			if menuItem.Icon != item.Icon {
+				menuItem.Icon = item.Icon
+				changed = true
+			}
 			if menuItem.Type != item.Type {
 				menuItem.Type = item.Type
 				changed = true

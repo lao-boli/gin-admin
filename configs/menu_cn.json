@@ -1,237 +1,174 @@
 [
     {
-        "code": "home",
-        "name": "首页",
-        "sequence": 90,
+        "code": "sports",
+        "name": "运动评估",
+        "sequence": 95,
         "type": "page",
-        "path": "/home",
-        "status": "enabled"
-    },
-    {
-        "code": "system",
-        "name": "系统管理",
-        "sequence": 10,
-        "type": "page",
-        "path": "/system",
+        "path": "/sports",
+        "icon": "lucide:layout-grid",
         "status": "enabled",
         "children": [
             {
-                "code": "menu",
-                "name": "菜单管理",
+                "code": "sports-subjects",
+                "name": "受试者管理",
+                "sequence": 100,
+                "type": "page",
+                "path": "/sports/subjects",
+                "icon": "lucide:users",
+                "status": "enabled",
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/sports/subjects"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/subjects"
+                    },
+                    {
+                        "method": "PUT",
+                        "path": "/api/v1/sports/subjects/{id}"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/subjects/{id}"
+                    }
+                ]
+            },
+            {
+                "code": "sports-categories",
+                "name": "类型与项目",
                 "sequence": 90,
                 "type": "page",
-                "path": "/system/menu",
+                "path": "/sports/categories",
+                "icon": "lucide:list-tree",
                 "status": "enabled",
-                "children": [
-                    {
-                        "code": "add",
-                        "name": "增加",
-                        "sequence": 9,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "POST",
-                                "path": "/api/v1/menus"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "edit",
-                        "name": "编辑",
-                        "sequence": 8,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "PUT",
-                                "path": "/api/v1/menus/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "delete",
-                        "name": "删除",
-                        "sequence": 7,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "DELETE",
-                                "path": "/api/v1/menus/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "search",
-                        "name": "查询",
-                        "sequence": 6,
-                        "type": "button",
-                        "status": "enabled"
-                    }
-                ],
                 "resources": [
                     {
                         "method": "GET",
-                        "path": "/api/v1/menus"
+                        "path": "/api/v1/sports/categories/tree"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/categories"
+                    },
+                    {
+                        "method": "PUT",
+                        "path": "/api/v1/sports/categories/{id}"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/categories/{id}"
                     },
                     {
                         "method": "GET",
-                        "path": "/api/v1/menus/{id}"
+                        "path": "/api/v1/sports/items"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/sports/items/{id}"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/items"
+                    },
+                    {
+                        "method": "PUT",
+                        "path": "/api/v1/sports/items/{id}"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/items/{id}"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/items/{id}/copy"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/items/{id}/eval"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/items/metrics/validate"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/sports/standards"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/standards"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/standards/batch"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/standards/{id}"
                     }
                 ]
             },
             {
-                "code": "role",
-                "name": "角色管理",
+                "code": "sports-record",
+                "name": "录入工作台",
                 "sequence": 80,
                 "type": "page",
-                "path": "/system/role",
+                "path": "/sports/record",
+                "icon": "lucide:clipboard-list",
                 "status": "enabled",
-                "children": [
-                    {
-                        "code": "add",
-                        "name": "增加",
-                        "sequence": 9,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "POST",
-                                "path": "/api/v1/roles"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "edit",
-                        "name": "编辑",
-                        "sequence": 8,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "PUT",
-                                "path": "/api/v1/roles/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "delete",
-                        "name": "删除",
-                        "sequence": 7,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "DELETE",
-                                "path": "/api/v1/roles/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "search",
-                        "name": "查询",
-                        "sequence": 6,
-                        "type": "button",
-                        "status": "enabled"
-                    }
-                ],
                 "resources": [
                     {
                         "method": "GET",
-                        "path": "/api/v1/menus"
+                        "path": "/api/v1/sports/records"
                     },
                     {
-                        "method": "GET",
-                        "path": "/api/v1/roles"
+                        "method": "POST",
+                        "path": "/api/v1/sports/records"
                     },
                     {
-                        "method": "GET",
-                        "path": "/api/v1/roles/{id}"
+                        "method": "PUT",
+                        "path": "/api/v1/sports/records/{id}"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/records/{id}"
                     }
                 ]
             },
             {
-                "code": "user",
-                "name": "用户管理",
+                "code": "sports-reports",
+                "name": "评估报告",
                 "sequence": 70,
                 "type": "page",
-                "path": "/system/user",
-                "status": "enabled",
-                "children": [
-                    {
-                        "code": "add",
-                        "name": "增加",
-                        "sequence": 9,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "POST",
-                                "path": "/api/v1/users"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "edit",
-                        "name": "编辑",
-                        "sequence": 8,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "PUT",
-                                "path": "/api/v1/users/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "delete",
-                        "name": "删除",
-                        "sequence": 7,
-                        "type": "button",
-                        "status": "enabled",
-                        "resources": [
-                            {
-                                "method": "DELETE",
-                                "path": "/api/v1/users/{id}"
-                            }
-                        ]
-                    },
-                    {
-                        "code": "search",
-                        "name": "查询",
-                        "sequence": 6,
-                        "type": "button",
-                        "status": "enabled"
-                    }
-                ],
-                "resources": [
-                    {
-                        "method": "GET",
-                        "path": "/api/v1/roles"
-                    },
-                    {
-                        "method": "GET",
-                        "path": "/api/v1/users"
-                    },
-                    {
-                        "method": "GET",
-                        "path": "/api/v1/users/{id}"
-                    }
-                ]
-            },
-            {
-                "code": "logger",
-                "name": "日志查询",
-                "sequence": 10,
-                "type": "page",
-                "path": "/system/logger",
+                "path": "/sports/reports",
+                "icon": "lucide:file-bar-chart",
                 "status": "enabled",
                 "resources": [
                     {
                         "method": "GET",
-                        "path": "/api/v1/loggers"
+                        "path": "/api/v1/sports/reports"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/sports/reports/{id}"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/reports"
+                    },
+                    {
+                        "method": "POST",
+                        "path": "/api/v1/sports/reports/preview"
+                    },
+                    {
+                        "method": "PUT",
+                        "path": "/api/v1/sports/reports/{id}/conclusion"
+                    },
+                    {
+                        "method": "DELETE",
+                        "path": "/api/v1/sports/reports/{id}"
                     }
                 ]
             }

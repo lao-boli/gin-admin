@@ -13,6 +13,10 @@ import (
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac/api"
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac/biz"
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac/dal"
+	"github.com/LyricTian/gin-admin/v10/internal/mods/sports"
+	sportsapi "github.com/LyricTian/gin-admin/v10/internal/mods/sports/api"
+	sportsbiz "github.com/LyricTian/gin-admin/v10/internal/mods/sports/biz"
+	sportsdal "github.com/LyricTian/gin-admin/v10/internal/mods/sports/dal"
 	"github.com/LyricTian/gin-admin/v10/pkg/util"
 )
 
@@ -119,8 +123,95 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		LoggerAPI: apiLogger,
 		Casbinx:   casbinx,
 	}
+	sportsCategoryDAL := &sportsdal.Category{
+		DB: db,
+	}
+	sportsItemDAL := &sportsdal.Item{
+		DB: db,
+	}
+	sportsStandardDAL := &sportsdal.Standard{
+		DB: db,
+	}
+	sportsSubjectDAL := &sportsdal.Subject{
+		DB: db,
+	}
+	sportsRecordDAL := &sportsdal.Record{
+		DB: db,
+	}
+	sportsReportDAL := &sportsdal.Report{
+		DB: db,
+	}
+	evalEngine := &sportsbiz.EvalEngine{}
+	sportsCategoryBIZ := &sportsbiz.Category{
+		Trans:       trans,
+		CategoryDAL: sportsCategoryDAL,
+		ItemDAL:     sportsItemDAL,
+	}
+	sportsItemBIZ := &sportsbiz.Item{
+		Trans:       trans,
+		ItemDAL:     sportsItemDAL,
+		StandardDAL: sportsStandardDAL,
+		EvalEngine:  evalEngine,
+	}
+	sportsStandardBIZ := &sportsbiz.Standard{
+		Trans:       trans,
+		StandardDAL: sportsStandardDAL,
+	}
+	sportsSubjectBIZ := &sportsbiz.Subject{
+		Trans:      trans,
+		SubjectDAL: sportsSubjectDAL,
+		RecordDAL:  sportsRecordDAL,
+	}
+	sportsRecordBIZ := &sportsbiz.Record{
+		Trans:       trans,
+		RecordDAL:   sportsRecordDAL,
+		SubjectDAL:  sportsSubjectDAL,
+		ItemDAL:     sportsItemDAL,
+		StandardDAL: sportsStandardDAL,
+		EvalEngine:  evalEngine,
+	}
+	sportsReportBIZ := &sportsbiz.Report{
+		Trans:      trans,
+		ReportDAL:  sportsReportDAL,
+		RecordDAL:  sportsRecordDAL,
+		SubjectDAL: sportsSubjectDAL,
+		ItemDAL:    sportsItemDAL,
+	}
+	sportsSeedBIZ := &sportsbiz.Seed{
+		DB: db,
+	}
+	sportsCategoryAPI := &sportsapi.Category{
+		CategoryBIZ: sportsCategoryBIZ,
+	}
+	sportsSubjectAPI := &sportsapi.Subject{
+		SubjectBIZ: sportsSubjectBIZ,
+	}
+	sportsItemAPI := &sportsapi.Item{
+		ItemBIZ:    sportsItemBIZ,
+		SubjectBIZ: sportsSubjectBIZ,
+	}
+	sportsStandardAPI := &sportsapi.Standard{
+		StandardBIZ: sportsStandardBIZ,
+	}
+	sportsRecordAPI := &sportsapi.Record{
+		RecordBIZ: sportsRecordBIZ,
+	}
+	sportsReportAPI := &sportsapi.Report{
+		ReportBIZ: sportsReportBIZ,
+	}
+	sportsSports := &sports.Sports{
+		DB:          db,
+		CategoryAPI: sportsCategoryAPI,
+		ItemAPI:     sportsItemAPI,
+		SubjectAPI:  sportsSubjectAPI,
+		RecordAPI:   sportsRecordAPI,
+		ReportAPI:   sportsReportAPI,
+		StandardAPI: sportsStandardAPI,
+		SeedBIZ:     sportsSeedBIZ,
+	}
 	modsMods := &mods.Mods{
-		RBAC: rbacRBAC,
+		RBAC:   rbacRBAC,
+		Sports: sportsSports,
 	}
 	injector := &Injector{
 		DB:    db,

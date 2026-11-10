@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac"
+	"github.com/LyricTian/gin-admin/v10/internal/mods/sports"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 )
@@ -16,14 +17,20 @@ const (
 var Set = wire.NewSet(
 	wire.Struct(new(Mods), "*"),
 	rbac.Set,
+	sports.Set,
 )
 
 type Mods struct {
-	RBAC *rbac.RBAC
+	RBAC   *rbac.RBAC
+	Sports *sports.Sports
 }
 
 func (a *Mods) Init(ctx context.Context) error {
 	if err := a.RBAC.Init(ctx); err != nil {
+		return err
+	}
+
+	if err := a.Sports.Init(ctx); err != nil {
 		return err
 	}
 
@@ -44,11 +51,19 @@ func (a *Mods) RegisterRouters(ctx context.Context, e *gin.Engine) error {
 		return err
 	}
 
+	if err := a.Sports.RegisterV1Routers(ctx, v1); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (a *Mods) Release(ctx context.Context) error {
 	if err := a.RBAC.Release(ctx); err != nil {
+		return err
+	}
+
+	if err := a.Sports.Release(ctx); err != nil {
 		return err
 	}
 

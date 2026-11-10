@@ -3,8 +3,6 @@ package gormx
 import (
 	"database/sql"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -12,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -50,9 +47,10 @@ func New(cfg Config) (*gorm.DB, error) {
 		dialector = mysql.Open(cfg.DSN)
 	case "postgres":
 		dialector = postgres.Open(cfg.DSN)
+	// 注：sqlite3 驱动依赖 CGO（mattn/go-sqlite3），本机构建环境无 gcc，
+	// 且项目统一使用 PostgreSQL，故不再编译 sqlite 支持（CGO_ENABLED=0 下该驱动 init 即 panic）。
 	case "sqlite3":
-		_ = os.MkdirAll(filepath.Dir(cfg.DSN), os.ModePerm)
-		dialector = sqlite.Open(cfg.DSN)
+		return nil, fmt.Errorf("sqlite3 驱动已禁用（无 CGO 构建），请使用 postgres 或 mysql")
 	default:
 		return nil, fmt.Errorf("unsupported database type: %s", cfg.DBType)
 	}
@@ -87,21 +85,15 @@ func New(cfg Config) (*gorm.DB, error) {
 			case "postgres":
 				open = postgres.Open
 			case "sqlite3":
-				open = sqlite.Open
+				continue
 			default:
 				continue
 			}
 
 			for _, replica := range r.Replicas {
-				if dbType == "sqlite3" {
-					_ = os.MkdirAll(filepath.Dir(cfg.DSN), os.ModePerm)
-				}
 				resolverCfg.Replicas = append(resolverCfg.Replicas, open(replica))
 			}
 			for _, source := range r.Sources {
-				if dbType == "sqlite3" {
-					_ = os.MkdirAll(filepath.Dir(cfg.DSN), os.ModePerm)
-				}
 				resolverCfg.Sources = append(resolverCfg.Sources, open(source))
 			}
 			tables := stringSliceToInterfaceSlice(r.Tables)

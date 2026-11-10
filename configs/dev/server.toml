@@ -6,7 +6,7 @@ PprofAddr = "" # Pprof monitor address, "localhost:6060"
 DisableSwagger = false
 DisablePrintConfig = false
 DefaultLoginPwd = "6351623c8cef86fefabfa7da046fc619" # MD5("abc-123")
-MenuFile = "menu.json" # Or use "menu_cn.json"
+MenuFile = "menu_cn.json" # Or use "menu.json"
 DenyOperateMenu = true
 
 [General.HTTP]
@@ -44,9 +44,9 @@ DB = 1
 
 [Storage.DB]
 Debug = true
-Type = "sqlite3" # sqlite3/mysql/postgres
-# SQLite3 DSN
-DSN = "data/ginadmin.db"
+Type = "postgres" # sqlite3/mysql/postgres
+# PostgreSQL DSN (local sportsmanager)
+DSN = "host=127.0.0.1 user=postgres password=root dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 # MySQL DSN
 # DSN = "root:123@tcp(127.0.0.1:3306)/ginadmin?charset=utf8mb4&parseTime=True&loc=Local"
 # PostgreSQL DSN

@@ -31,6 +31,7 @@ type Menu struct {
 	Sequence    int           `json:"sequence" gorm:"index;"`             // Sequence for sorting (Order by desc)
 	Type        string        `json:"type" gorm:"size:20;index"`          // Type of menu (page, button)
 	Path        string        `json:"path" gorm:"size:255;"`              // Access path of menu
+	Icon        string        `json:"icon" gorm:"size:64;"`               // Icon name of menu (e.g. lucide:users)
 	Properties  string        `json:"properties" gorm:"type:text;"`       // Properties of menu (JSON)
 	Status      string        `json:"status" gorm:"size:20;index"`        // Status of menu (enabled, disabled)
 	ParentID    string        `json:"parent_id" gorm:"size:20;index;"`    // Parent ID (From Menu.ID)
@@ -148,6 +149,7 @@ type MenuForm struct {
 	Sequence    int           `json:"sequence"`                                         // Sequence for sorting (Order by desc)
 	Type        string        `json:"type" binding:"required,oneof=page button"`        // Type of menu (page, button)
 	Path        string        `json:"path"`                                             // Access path of menu
+	Icon        string        `json:"icon"`                                             // Icon name of menu (e.g. lucide:users)
 	Properties  string        `json:"properties"`                                       // Properties of menu (JSON)
 	Status      string        `json:"status" binding:"required,oneof=disabled enabled"` // Status of menu (enabled, disabled)
 	ParentID    string        `json:"parent_id"`                                        // Parent ID (From Menu.ID)
@@ -171,6 +173,7 @@ func (a *MenuForm) FillTo(menu *Menu) error {
 	menu.Sequence = a.Sequence
 	menu.Type = a.Type
 	menu.Path = a.Path
+	menu.Icon = a.Icon
 	menu.Properties = a.Properties
 	menu.Status = a.Status
 	menu.ParentID = a.ParentID

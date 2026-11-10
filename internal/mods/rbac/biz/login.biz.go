@@ -141,8 +141,9 @@ func (a *Login) genUserToken(ctx context.Context, userID string) (*schema.LoginT
 }
 
 func (a *Login) Login(ctx context.Context, formItem *schema.LoginForm) (*schema.LoginToken, error) {
-	// verify captcha
-	if !captcha.VerifyString(formItem.CaptchaID, formItem.CaptchaCode) {
+	// verify captcha（Debug 模式下放开万能码 0000，仅本地调试用）
+	if !(config.C.General.Debug && formItem.CaptchaCode == "0000") &&
+		!captcha.VerifyString(formItem.CaptchaID, formItem.CaptchaCode) {
 		return nil, errors.BadRequest(config.ErrInvalidCaptchaID, "Incorrect captcha")
 	}
 
