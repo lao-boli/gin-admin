@@ -10,12 +10,6 @@ definitions:
       status:
         type: string
     type: object
-  schema.Captcha:
-    properties:
-      captcha_id:
-        description: Captcha ID
-        type: string
-    type: object
   schema.Logger:
     properties:
       created_at:
@@ -54,12 +48,6 @@ definitions:
     type: object
   schema.LoginForm:
     properties:
-      captcha_code:
-        description: Captcha verify code
-        type: string
-      captcha_id:
-        description: Captcha verify id
-        type: string
       password:
         description: Login password (md5 hash)
         type: string
@@ -67,8 +55,6 @@ definitions:
         description: Login name
         type: string
     required:
-    - captcha_code
-    - captcha_id
     - password
     - username
     type: object
@@ -99,6 +85,9 @@ definitions:
         type: string
       description:
         description: Details about menu
+        type: string
+      icon:
+        description: Icon name of menu (e.g. lucide:users)
         type: string
       id:
         description: Unique ID
@@ -144,6 +133,9 @@ definitions:
         type: string
       description:
         description: Details about menu
+        type: string
+      icon:
+        description: Icon name of menu (e.g. lucide:users)
         type: string
       name:
         description: Display name of menu
@@ -436,45 +428,6 @@ info:
   title: ginadmin
   version: v10.1.0
 paths:
-  /api/v1/captcha/id:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ResponseResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schema.Captcha'
-              type: object
-      summary: Get captcha ID
-      tags:
-      - LoginAPI
-  /api/v1/captcha/image:
-    get:
-      parameters:
-      - description: Captcha ID
-        in: query
-        name: id
-        required: true
-        type: string
-      - description: Reload captcha image (reload=1)
-        in: query
-        name: reload
-        type: number
-      produces:
-      - image/png
-      responses:
-        "200":
-          description: Captcha image
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/util.ResponseResult'
-      summary: Response captcha image
-      tags:
-      - LoginAPI
   /api/v1/current/logout:
     post:
       responses:
@@ -1067,6 +1020,242 @@ paths:
       summary: Update role record by ID
       tags:
       - RoleAPI
+  /api/v1/sports/categories:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create category
+      tags:
+      - SportsCategoryAPI
+  /api/v1/sports/categories/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete category
+      tags:
+      - SportsCategoryAPI
+    put:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update category
+      tags:
+      - SportsCategoryAPI
+  /api/v1/sports/categories/tree:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query category tree
+      tags:
+      - SportsCategoryAPI
+  /api/v1/sports/items:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query item list
+      tags:
+      - SportsItemAPI
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create item
+      tags:
+      - SportsItemAPI
+  /api/v1/sports/items/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete item
+      tags:
+      - SportsItemAPI
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get item (with fields/metrics/rule)
+      tags:
+      - SportsItemAPI
+    put:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update item
+      tags:
+      - SportsItemAPI
+  /api/v1/sports/items/{id}/copy:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Copy item to target category
+      tags:
+      - SportsItemAPI
+  /api/v1/sports/items/{id}/eval:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Eval fields preview (fields → metrics → score)
+      tags:
+      - SportsItemAPI
+  /api/v1/sports/items/metrics/validate:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Validate metric formula
+      tags:
+      - SportsItemAPI
+  /api/v1/sports/records:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query records
+      tags:
+      - SportsRecordAPI
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create record (single)
+      tags:
+      - SportsRecordAPI
+  /api/v1/sports/records/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete record
+      tags:
+      - SportsRecordAPI
+    put:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update record
+      tags:
+      - SportsRecordAPI
+  /api/v1/sports/reports:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query reports
+      tags:
+      - SportsReportAPI
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create report
+      tags:
+      - SportsReportAPI
+  /api/v1/sports/reports/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete report
+      tags:
+      - SportsReportAPI
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get report
+      tags:
+      - SportsReportAPI
+  /api/v1/sports/reports/{id}/conclusion:
+    put:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update report conclusion
+      tags:
+      - SportsReportAPI
+  /api/v1/sports/reports/preview:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Preview report data
+      tags:
+      - SportsReportAPI
+  /api/v1/sports/standards:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query standards by item
+      tags:
+      - SportsStandardAPI
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create standard
+      tags:
+      - SportsStandardAPI
+  /api/v1/sports/standards/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete standard
+      tags:
+      - SportsStandardAPI
+  /api/v1/sports/standards/batch:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Batch create standards (replace item's standards)
+      tags:
+      - SportsStandardAPI
+  /api/v1/sports/subjects:
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Query subject list
+      tags:
+      - SportsSubjectAPI
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create subject
+      tags:
+      - SportsSubjectAPI
+  /api/v1/sports/subjects/{id}:
+    delete:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete subject
+      tags:
+      - SportsSubjectAPI
+    get:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get subject
+      tags:
+      - SportsSubjectAPI
+    put:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update subject
+      tags:
+      - SportsSubjectAPI
   /api/v1/users:
     get:
       parameters:

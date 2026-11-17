@@ -2,20 +2,13 @@ package schema
 
 import "strings"
 
-type Captcha struct {
-	CaptchaID string `json:"captcha_id"` // Captcha ID
-}
-
 type LoginForm struct {
-	Username    string `json:"username" binding:"required"`     // Login name
-	Password    string `json:"password" binding:"required"`     // Login password (md5 hash)
-	CaptchaID   string `json:"captcha_id" binding:"required"`   // Captcha verify id
-	CaptchaCode string `json:"captcha_code" binding:"required"` // Captcha verify code
+	Username string `json:"username" binding:"required"` // Login name
+	Password string `json:"password" binding:"required"` // Login password (md5 hash)
 }
 
 func (a *LoginForm) Trim() *LoginForm {
 	a.Username = strings.TrimSpace(a.Username)
-	a.CaptchaCode = strings.TrimSpace(a.CaptchaCode)
 	return a
 }
 

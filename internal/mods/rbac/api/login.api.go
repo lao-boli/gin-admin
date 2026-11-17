@@ -12,36 +12,6 @@ type Login struct {
 }
 
 // @Tags LoginAPI
-// @Summary Get captcha ID
-// @Success 200 {object} util.ResponseResult{data=schema.Captcha}
-// @Router /api/v1/captcha/id [get]
-func (a *Login) GetCaptcha(c *gin.Context) {
-	ctx := c.Request.Context()
-	data, err := a.LoginBIZ.GetCaptcha(ctx)
-	if err != nil {
-		util.ResError(c, err)
-		return
-	}
-	util.ResSuccess(c, data)
-}
-
-// @Tags LoginAPI
-// @Summary Response captcha image
-// @Param id query string true "Captcha ID"
-// @Param reload query number false "Reload captcha image (reload=1)"
-// @Produce image/png
-// @Success 200 "Captcha image"
-// @Failure 404 {object} util.ResponseResult
-// @Router /api/v1/captcha/image [get]
-func (a *Login) ResponseCaptcha(c *gin.Context) {
-	ctx := c.Request.Context()
-	err := a.LoginBIZ.ResponseCaptcha(ctx, c.Writer, c.Query("id"), c.Query("reload") == "1")
-	if err != nil {
-		util.ResError(c, err)
-	}
-}
-
-// @Tags LoginAPI
 // @Summary Login system with username and password
 // @Param body body schema.LoginForm true "Request body"
 // @Success 200 {object} util.ResponseResult{data=schema.LoginToken}

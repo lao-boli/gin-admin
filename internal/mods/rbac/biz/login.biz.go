@@ -2,11 +2,9 @@ package biz
 
 import (
 	"context"
-	"net/http"
 	"sort"
 	"time"
 
-	"github.com/LyricTian/captcha"
 	"github.com/LyricTian/gin-admin/v10/internal/config"
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac/dal"
 	"github.com/LyricTian/gin-admin/v10/internal/mods/rbac/schema"
@@ -94,33 +92,6 @@ func (a *Login) ParseUserID(c *gin.Context) (string, error) {
 
 // This function generates a new captcha ID and returns it as a `schema.Captcha` struct. The length of
 // the captcha is determined by the `config.C.Util.Captcha.Length` configuration value.
-func (a *Login) GetCaptcha(ctx context.Context) (*schema.Captcha, error) {
-	return &schema.Captcha{
-		CaptchaID: captcha.NewLen(config.C.Util.Captcha.Length),
-	}, nil
-}
-
-// Response captcha image
-func (a *Login) ResponseCaptcha(ctx context.Context, w http.ResponseWriter, id string, reload bool) error {
-	if reload && !captcha.Reload(id) {
-		return errors.NotFound("", "Captcha id not found")
-	}
-
-	err := captcha.WriteImage(w, id, config.C.Util.Captcha.Width, config.C.Util.Captcha.Height)
-	if err != nil {
-		if err == captcha.ErrNotFound {
-			return errors.NotFound("", "Captcha id not found")
-		}
-		return err
-	}
-
-	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	w.Header().Set("Pragma", "no-cache")
-	w.Header().Set("Expires", "0")
-	w.Header().Set("Content-Type", "image/png")
-	return nil
-}
-
 func (a *Login) genUserToken(ctx context.Context, userID string) (*schema.LoginToken, error) {
 	token, err := a.Auth.GenerateToken(ctx, userID)
 	if err != nil {
@@ -141,12 +112,6 @@ func (a *Login) genUserToken(ctx context.Context, userID string) (*schema.LoginT
 }
 
 func (a *Login) Login(ctx context.Context, formItem *schema.LoginForm) (*schema.LoginToken, error) {
-	// verify captcha（Debug 模式下放开万能码 0000，仅本地调试用）
-	if !(config.C.General.Debug && formItem.CaptchaCode == "0000") &&
-		!captcha.VerifyString(formItem.CaptchaID, formItem.CaptchaCode) {
-		return nil, errors.BadRequest(config.ErrInvalidCaptchaID, "Incorrect captcha")
-	}
-
 	ctx = logging.NewTag(ctx, logging.TagKeyLogin)
 
 	// login by root

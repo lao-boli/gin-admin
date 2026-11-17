@@ -15,71 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/captcha/id": {
-            "get": {
-                "tags": [
-                    "LoginAPI"
-                ],
-                "summary": "Get captcha ID",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/util.ResponseResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schema.Captcha"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/captcha/image": {
-            "get": {
-                "produces": [
-                    "image/png"
-                ],
-                "tags": [
-                    "LoginAPI"
-                ],
-                "summary": "Response captcha image",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Captcha ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Reload captcha image (reload=1)",
-                        "name": "reload",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Captcha image"
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/current/logout": {
             "post": {
                 "security": [
@@ -1066,6 +1001,416 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/sports/categories": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsCategoryAPI"
+                ],
+                "summary": "Create category",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/categories/tree": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsCategoryAPI"
+                ],
+                "summary": "Query category tree",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/categories/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsCategoryAPI"
+                ],
+                "summary": "Update category",
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsCategoryAPI"
+                ],
+                "summary": "Delete category",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/items": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Query item list",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Create item",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/items/metrics/validate": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Validate metric formula",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/items/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Get item (with fields/metrics/rule)",
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Update item",
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Delete item",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/items/{id}/copy": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Copy item to target category",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/items/{id}/eval": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsItemAPI"
+                ],
+                "summary": "Eval fields preview (fields → metrics → score)",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/records": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsRecordAPI"
+                ],
+                "summary": "Query records",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsRecordAPI"
+                ],
+                "summary": "Create record (single)",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/records/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsRecordAPI"
+                ],
+                "summary": "Update record",
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsRecordAPI"
+                ],
+                "summary": "Delete record",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/reports": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Query reports",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Create report",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/reports/preview": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Preview report data",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/reports/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Get report",
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Delete report",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/reports/{id}/conclusion": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsReportAPI"
+                ],
+                "summary": "Update report conclusion",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/standards": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsStandardAPI"
+                ],
+                "summary": "Query standards by item",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsStandardAPI"
+                ],
+                "summary": "Create standard",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/standards/batch": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsStandardAPI"
+                ],
+                "summary": "Batch create standards (replace item's standards)",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/standards/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsStandardAPI"
+                ],
+                "summary": "Delete standard",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/subjects": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsSubjectAPI"
+                ],
+                "summary": "Query subject list",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsSubjectAPI"
+                ],
+                "summary": "Create subject",
+                "responses": {}
+            }
+        },
+        "/api/v1/sports/subjects/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsSubjectAPI"
+                ],
+                "summary": "Get subject",
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsSubjectAPI"
+                ],
+                "summary": "Update subject",
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "SportsSubjectAPI"
+                ],
+                "summary": "Delete subject",
+                "responses": {}
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "security": [
@@ -1420,15 +1765,6 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.Captcha": {
-            "type": "object",
-            "properties": {
-                "captcha_id": {
-                    "description": "Captcha ID",
-                    "type": "string"
-                }
-            }
-        },
         "schema.Logger": {
             "type": "object",
             "properties": {
@@ -1481,20 +1817,10 @@ const docTemplate = `{
         "schema.LoginForm": {
             "type": "object",
             "required": [
-                "captcha_code",
-                "captcha_id",
                 "password",
                 "username"
             ],
             "properties": {
-                "captcha_code": {
-                    "description": "Captcha verify code",
-                    "type": "string"
-                },
-                "captcha_id": {
-                    "description": "Captcha verify id",
-                    "type": "string"
-                },
                 "password": {
                     "description": "Login password (md5 hash)",
                     "type": "string"
@@ -1542,6 +1868,10 @@ const docTemplate = `{
                 },
                 "description": {
                     "description": "Details about menu",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "Icon name of menu (e.g. lucide:users)",
                     "type": "string"
                 },
                 "id": {
@@ -1609,6 +1939,10 @@ const docTemplate = `{
                 },
                 "description": {
                     "description": "Details about menu",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "Icon name of menu (e.g. lucide:users)",
                     "type": "string"
                 },
                 "name": {

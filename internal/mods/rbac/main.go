@@ -56,12 +56,6 @@ func (a *RBAC) Init(ctx context.Context) error {
 }
 
 func (a *RBAC) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) error {
-	captcha := v1.Group("captcha")
-	{
-		captcha.GET("id", a.LoginAPI.GetCaptcha)
-		captcha.GET("image", a.LoginAPI.ResponseCaptcha)
-	}
-
 	v1.POST("login", a.LoginAPI.Login)
 
 	current := v1.Group("current")
