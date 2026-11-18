@@ -1,28 +1,38 @@
-FROM golang:alpine as builder
+# syntax=docker/dockerfile:1
+# 国内镜像源：默认 DaoCloud 加速；其它可选 docker.1ms.run / dockerpull.org / dockerproxy.net
+# 可通过 docker compose 的 REGISTRY 变量或 --build-arg 覆盖（见 docker-compose.yml）
+ARG REGISTRY=docker.m.daocloud.io
 
-ARG APP=ginadmin
-ARG VERSION=v10.1.0
-ARG RELEASE_TAG=$(VERSION)
+# ---------- 构建 ----------
+FROM ${REGISTRY}/library/golang:1.22-alpine AS builder
 
-# Install the required packages
-RUN apk add --no-cache gcc musl-dev sqlite-dev
+# Go 模块代理走国内
+ARG GOPROXY=https://goproxy.cn,direct
+ENV GOPROXY=${GOPROXY} \
+    CGO_ENABLED=0 \
+    GOOS=linux
 
-# Set CGO_CFLAGS to enable large file support
-ENV CGO_CFLAGS "-D_LARGEFILE64_SOURCE"
-
-ENV GOPROXY="https://goproxy.cn"
-
-WORKDIR /go/src/${APP}
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
+RUN go build -trimpath -ldflags "-s -w" -o /src/ginadmin .
 
-# Build the application
-RUN go build -ldflags "-w -s -X main.VERSION=${RELEASE_TAG}" -o ./${APP} .
+# ---------- 运行 ----------
+FROM ${REGISTRY}/library/alpine:3.20
 
-FROM alpine
-ARG APP=ginadmin
-WORKDIR /go/src/${APP}
-COPY --from=builder /go/src/${APP}/${APP} /usr/bin/
-# COPY --from=builder /go/src/${APP}/configs /usr/bin/configs
-# COPY --from=builder /go/src/${APP}/dist /usr/bin/dist
-ENTRYPOINT ["ginadmin", "start", "-d", "/usr/bin/configs", "-c", "prod", "-s", "/usr/bin/dist"]
+# alpine 包源换中科大，并装时区/证书
+RUN sed -i 's#dl-cdn.alpinelinux.org#mirrors.ustc.edu.cn#g' /etc/apk/repositories \
+    && apk add --no-cache ca-certificates tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone
+
+WORKDIR /app
+COPY --from=builder /src/ginadmin /app/ginadmin
+# 配置目录：start 用 -d 指定 WorkDir=configs，-c prod 读 configs/prod/*.toml
+# menu_cn.json / rbac_model.conf 在 configs 根目录，所以整个 configs 一起拷
+COPY configs /app/configs
+RUN mkdir -p /app/data
+
 EXPOSE 8040
+ENTRYPOINT ["/app/ginadmin", "start", "-d", "/app/configs", "-c", "prod"]

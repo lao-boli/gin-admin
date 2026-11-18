@@ -1,0 +1,28 @@
+[Logger]
+Debug = false
+Level = "info" # debug/info/warn/error/dpanic/panic/fatal
+CallerSkip = 1
+
+[Logger.File]
+Enable = false
+Path = "data/log/ginadmin.log"
+MaxBackups = 20 # Files
+MaxSize = 64 # MB
+
+[[Logger.Hooks]]
+# 日志入库钩子关闭：本机构建无 CGO，sqlite3 驱动不可用；
+# 如需日志入库，把 DBType/DSN 改成 postgres 后再置 Enable = true
+Enable = false
+Level = "info"
+Type = "gorm" # gorm
+MaxBuffer = 1024
+MaxThread = 2
+
+[Logger.Hooks.Options]
+Debug = "false"
+DBType = "postgres"
+DSN = "host=db user=postgres password=root dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+MaxOpenConns = "16"
+MaxIdleConns = "4"
+MaxLifetime = "86400"
+MaxIdleTime = "7200"

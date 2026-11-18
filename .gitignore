@@ -30,6 +30,7 @@ tmp
 # IDE configs
 .idea
 .vscode
+.openidea
 # 本地运行日志
 .workbuddy_*.log
 .workbuddy_*.txt

@@ -1,0 +1,11 @@
+.git
+.gitignore
+.openidea
+.idea
+.vscode
+data
+*.exe
+test
+docs
+docker-compose.yml
+Dockerfile

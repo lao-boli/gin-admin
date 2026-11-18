@@ -1,0 +1,50 @@
+# 运动评估管理系统 - 后端 + PostgreSQL
+# 用法：
+#   docker compose up -d --build          # 首次/更新都可用
+#   docker compose logs -f app            # 看后端日志
+#   docker compose down                   # 停止（数据保留在 pgdata 卷）
+# 国内镜像源：换 REGISTRY 即可，例如 REGISTRY=docker.1ms.run docker compose up -d --build
+name: sportsmanager
+
+services:
+  db:
+    image: ${REGISTRY:-docker.m.daocloud.io}/library/postgres:16-alpine
+    container_name: sports-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+      TZ: Asia/Shanghai
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    # 需要本机直连数据库排障时取消注释（生产不建议暴露）
+    # ports:
+    #   - "5432:5432"
+
+  app:
+    build:
+      context: .
+      args:
+        REGISTRY: ${REGISTRY:-docker.m.daocloud.io}
+        GOPROXY: ${GOPROXY:-https://goproxy.cn,direct}
+    container_name: sports-app
+    environment:
+      TZ: Asia/Shanghai
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8040:8040"
+    volumes:
+      # badger token 缓存 + 日志（容器重建不丢登录态）
+      - ./data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
